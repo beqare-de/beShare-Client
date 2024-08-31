@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu, shell } = require("electron");
 const path = require("node:path");
 const fs = require("fs");
 
@@ -10,7 +10,7 @@ function createWindow() {
     minHeight: 600,
     backgroundColor: "#000",
     center: true,
-    autoHideMenuBar: true,
+    autoHideMenuBar: false,
     title: "beShare",
     show: true,
     frame: true,
@@ -41,6 +41,35 @@ function createWindow() {
       console.error("Error loading resources:", error);
     }
   });
+
+  const menuTemplate = [
+    {
+      label: "Menu",
+      submenu: [
+        {
+          label: "Repo",
+          click() {
+            shell.openExternal("https://github.com/beqare/beShare");
+          },
+        },
+        {
+          label: "Discord",
+          click() {
+            shell.openExternal("https://beqare.de/discord");
+          },
+        },
+        {
+          label: "Update",
+          click() {
+            
+          },
+        },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
 }
 
 app.whenReady().then(() => {
