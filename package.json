@@ -1,7 +1,7 @@
 {
   "name": "beshare",
   "version": "1.0.3",
-  "description": "Share files online",
+  "description": "Share your Files online",
   "main": "index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -28,7 +28,10 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron/fuses": "^1.8.0",
-    "electron": "^32.0.1"
+    "electron": "^32.0.1",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1"
   },
   "dependencies": {
     "axios": "^1.7.6",
