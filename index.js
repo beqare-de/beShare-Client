@@ -1,4 +1,11 @@
-const { app, BrowserWindow, Menu, shell, dialog } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  Menu,
+  shell,
+  dialog,
+  clipboard,
+} = require("electron");
 const path = require("node:path");
 const fs = require("fs");
 const axios = require("axios");
@@ -126,6 +133,16 @@ function createWindow() {
           },
         },
       ],
+    },
+    {
+      label: "Copy URL",
+      click: () => {
+        const focusedWindow = BrowserWindow.getFocusedWindow();
+        if (focusedWindow) {
+          const url = focusedWindow.webContents.getURL();
+          clipboard.writeText(url);
+        }
+      },
     },
   ];
 
