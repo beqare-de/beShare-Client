@@ -1,0 +1,22 @@
+{
+  "name": "beshare",
+  "version": "1.0.0",
+  "description": "Share files onlien",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beqare/beShare.git"
+  },
+  "author": "beqare",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beqare/beShare/issues"
+  },
+  "homepage": "https://github.com/beqare/beShare#readme",
+  "devDependencies": {
+    "electron": "^32.0.1"
+  }
+}

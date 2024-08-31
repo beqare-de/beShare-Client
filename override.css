@@ -1,0 +1,77 @@
+header {
+  display: none !important;
+}
+footer {
+  display: none !important;
+}
+.debug {
+  display: none !important;
+}
+
+body {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  background-image: none !important;
+  background-color: #111 !important;
+}
+
+main {
+  max-width: 1500px !important;
+  width: 100% !important;
+}
+
+.block {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0px !important;
+}
+section {
+  border: none !important;
+  background-color: transparent !important;
+  padding: 0px 20px 0px 20px !important;
+  box-shadow: none !important;
+}
+
+input[type="file"],
+button {
+  background-color: #222 !important;
+  border-radius: 10px !important;
+  border: solid 1px #333 !important;
+  color: #999 !important;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #222 !important;
+  border-radius: 10px !important;
+  border: solid 1px #333 !important;
+  color: #999 !important;
+}
+input[type="file"]::file-selector-button:hover,
+button:hover {
+  color: #fff !important;
+  border: solid 1px #fff !important;
+}
+.info {
+  background-color: #333 !important;
+  border: solid 1px #222 !important;
+  color: #999 !important;
+}
+
+.statuslink {
+  border-radius: 10px !important;
+  margin: 0px 0px 20px 0px !important;
+  background: transparent !important;
+}
+#download-link {
+  background: transparent !important;
+}
+.upload-link {
+  margin: 10px 0px 10px 0px !important;
+  color: white !important;
+  background: transparent !important;
+  text-shadow: 0px 0px 10px white !important;
+}
