@@ -2,11 +2,12 @@ const { app, BrowserWindow, Menu, shell, dialog } = require("electron");
 const path = require("node:path");
 const fs = require("fs");
 const axios = require("axios");
-const packageJson = require("./package.json"); // Lies die aktuelle Version aus package.json
+const packageJson = require("./package.json");
+const semver = require("semver");
 
 const REPO_OWNER = "beqare";
 const REPO_NAME = "beShare";
-const CURRENT_VERSION = packageJson.version; // aktuelle Version aus package.json
+const CURRENT_VERSION = packageJson.version;
 
 async function checkForUpdates() {
   try {
@@ -14,23 +15,20 @@ async function checkForUpdates() {
       `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest`
     );
     const latestRelease = response.data;
-    const latestVersion = latestRelease.tag_name;
+    const latestVersion = latestRelease.tag_name.replace(/^v/, "");
 
-    if (CURRENT_VERSION !== latestVersion) {
-      dialog
-        .showMessageBox({
-          type: "info",
-          title: "Update Available",
-          message: `A new version (${latestVersion}) is available. You are currently on ${CURRENT_VERSION}.`,
-          buttons: ["OK", "Download Update"],
-        })
-        .then((result) => {
-          if (result.response === 1) {
-            shell.openExternal(latestRelease.html_url);
-          }
-        });
+    if (semver.gt(latestVersion, CURRENT_VERSION)) {
+      const result = await dialog.showMessageBox({
+        type: "info",
+        title: "Update Available",
+        message: `A new version (${latestVersion}) is available. You are currently on ${CURRENT_VERSION}.`,
+        buttons: ["OK", "Download Update"],
+      });
+      if (result.response === 1) {
+        shell.openExternal(latestRelease.html_url);
+      }
     } else {
-      dialog.showMessageBox({
+      await dialog.showMessageBox({
         type: "info",
         title: "No Updates",
         message: "You are on the latest version.",
@@ -39,7 +37,7 @@ async function checkForUpdates() {
     }
   } catch (error) {
     console.error("Error checking for updates:", error);
-    dialog.showMessageBox({
+    await dialog.showMessageBox({
       type: "error",
       title: "Update Check Failed",
       message: "Failed to check for updates. Please try again later.",
@@ -113,14 +111,14 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 }
 
-app.whenReady().then(() => {
+app.on("ready", () => {
   createWindow();
+});
 
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });
 
 app.on("window-all-closed", () => {

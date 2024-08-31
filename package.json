@@ -1,6 +1,6 @@
 {
   "name": "beshare",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Share files online",
   "main": "index.js",
   "scripts": {
@@ -32,6 +32,33 @@
   },
   "dependencies": {
     "axios": "^1.7.6",
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "semver": "^7.3.8"
+  },
+  "forge": {
+    "makers": [
+      {
+        "name": "@electron-forge/maker-squirrel",
+        "config": {
+          "name": "beshare"
+        }
+      },
+      {
+        "name": "@electron-forge/maker-zip",
+        "config": {}
+      }
+    ],
+    "plugins": [
+      {
+        "name": "@electron-forge/plugin-auto-unpack-natives",
+        "config": {}
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/semver",
+        "to": "node_modules/semver"
+      }
+    ]
   }
 }
