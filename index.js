@@ -1,6 +1,52 @@
-const { app, BrowserWindow, Menu, shell } = require("electron");
+const { app, BrowserWindow, Menu, shell, dialog } = require("electron");
 const path = require("node:path");
 const fs = require("fs");
+const axios = require("axios");
+const packageJson = require("./package.json"); // Lies die aktuelle Version aus package.json
+
+const REPO_OWNER = "beqare";
+const REPO_NAME = "beShare";
+const CURRENT_VERSION = packageJson.version; // aktuelle Version aus package.json
+
+async function checkForUpdates() {
+  try {
+    const response = await axios.get(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest`
+    );
+    const latestRelease = response.data;
+    const latestVersion = latestRelease.tag_name;
+
+    if (CURRENT_VERSION !== latestVersion) {
+      dialog
+        .showMessageBox({
+          type: "info",
+          title: "Update Available",
+          message: `A new version (${latestVersion}) is available. You are currently on ${CURRENT_VERSION}.`,
+          buttons: ["OK", "Download Update"],
+        })
+        .then((result) => {
+          if (result.response === 1) {
+            shell.openExternal(latestRelease.html_url);
+          }
+        });
+    } else {
+      dialog.showMessageBox({
+        type: "info",
+        title: "No Updates",
+        message: "You are on the latest version.",
+        buttons: ["OK"],
+      });
+    }
+  } catch (error) {
+    console.error("Error checking for updates:", error);
+    dialog.showMessageBox({
+      type: "error",
+      title: "Update Check Failed",
+      message: "Failed to check for updates. Please try again later.",
+      buttons: ["OK"],
+    });
+  }
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -44,21 +90,22 @@ function createWindow() {
 
   const menuTemplate = [
     {
-      label: "Menu",
-      submenu: [
-        {
-          label: "Repo",
-          click() {
-            shell.openExternal("https://github.com/beqare/beShare");
-          },
-        },
-        {
-          label: "Discord",
-          click() {
-            shell.openExternal("https://beqare.de/discord");
-          },
-        },
-      ],
+      label: "Check for Updates...",
+      click() {
+        checkForUpdates();
+      },
+    },
+    {
+      label: "Repository",
+      click() {
+        shell.openExternal("https://github.com/beqare/beShare");
+      },
+    },
+    {
+      label: "Discord",
+      click() {
+        shell.openExternal("https://beqare.de/discord");
+      },
     },
   ];
 
