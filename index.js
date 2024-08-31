@@ -79,7 +79,7 @@ function createWindow() {
     backgroundColor: "#000",
     center: true,
     autoHideMenuBar: false,
-    title: "beShare",
+    title: `beShare ${CURRENT_VERSION}`,
     show: true,
     frame: true,
     fullscreen: false,
@@ -90,6 +90,12 @@ function createWindow() {
 
   win.webContents.on("did-finish-load", () => {
     loadResources(win);
+    win.setTitle(`beShare ${CURRENT_VERSION}`);
+  });
+
+  win.webContents.on("page-title-updated", (event) => {
+    event.preventDefault();
+    win.setTitle(`beShare ${CURRENT_VERSION}`);
   });
 
   const menuTemplate = [
