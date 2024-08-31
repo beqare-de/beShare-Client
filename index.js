@@ -8,6 +8,9 @@ const semver = require("semver");
 const REPO_OWNER = "beqare";
 const REPO_NAME = "beShare";
 const CURRENT_VERSION = packageJson.version;
+const CSS_PATH = path.join(__dirname, "override.css");
+const JS_PATH = path.join(__dirname, "override.js");
+const ICON_PATH = path.join(__dirname, "icon.png");
 
 async function checkForUpdates() {
   try {
@@ -24,6 +27,7 @@ async function checkForUpdates() {
         message: `A new version (${latestVersion}) is available. You are currently on ${CURRENT_VERSION}.`,
         buttons: ["OK", "Download Update"],
       });
+
       if (result.response === 1) {
         shell.openExternal(latestRelease.html_url);
       }
@@ -46,6 +50,26 @@ async function checkForUpdates() {
   }
 }
 
+function loadResources(win) {
+  try {
+    if (fs.existsSync(CSS_PATH)) {
+      const css = fs.readFileSync(CSS_PATH, "utf8");
+      win.webContents.insertCSS(css);
+    } else {
+      console.warn("CSS file not found:", CSS_PATH);
+    }
+
+    if (fs.existsSync(JS_PATH)) {
+      const js = fs.readFileSync(JS_PATH, "utf8");
+      win.webContents.executeJavaScript(js);
+    } else {
+      console.warn("JS file not found:", JS_PATH);
+    }
+  } catch (error) {
+    console.error("Error loading resources:", error);
+  }
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -59,67 +83,38 @@ function createWindow() {
     show: true,
     frame: true,
     fullscreen: false,
-    icon: path.join(__dirname, "icon.png"),
+    icon: ICON_PATH,
   });
 
   win.loadURL("https://beqare.de/share");
 
   win.webContents.on("did-finish-load", () => {
-    try {
-      const cssPath = path.join(__dirname, "override.css");
-      if (fs.existsSync(cssPath)) {
-        const css = fs.readFileSync(cssPath, "utf8");
-        win.webContents.insertCSS(css);
-      } else {
-        console.warn("CSS file not found:", cssPath);
-      }
-
-      const jsPath = path.join(__dirname, "override.js");
-      if (fs.existsSync(jsPath)) {
-        const js = fs.readFileSync(jsPath, "utf8");
-        win.webContents.executeJavaScript(js);
-      } else {
-        console.warn("JS file not found:", jsPath);
-      }
-    } catch (error) {
-      console.error("Error loading resources:", error);
-    }
+    loadResources(win);
   });
 
   const menuTemplate = [
     {
       label: "Check for Updates...",
-      click() {
-        checkForUpdates();
-      },
+      click: checkForUpdates,
     },
     {
       label: "Repository",
-      click() {
-        shell.openExternal("https://github.com/beqare/beShare");
-      },
+      click: () => shell.openExternal("https://github.com/beqare/beShare"),
     },
     {
       label: "Discord",
-      click() {
-        shell.openExternal("https://beqare.de/discord");
-      },
+      click: () => shell.openExternal("https://beqare.de/discord"),
     },
     {
       label: "Reload",
       submenu: [
         {
           label: "Web",
-          click() {
-            const currentWindow = BrowserWindow.getFocusedWindow();
-            if (currentWindow) {
-              currentWindow.reload();
-            }
-          },
+          click: () => BrowserWindow.getFocusedWindow()?.reload(),
         },
         {
           label: "Client",
-          click() {
+          click: () => {
             app.relaunch();
             app.exit(0);
           },
@@ -132,9 +127,7 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 }
 
-app.on("ready", () => {
-  createWindow();
-});
+app.whenReady().then(createWindow);
 
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
