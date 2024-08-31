@@ -58,12 +58,6 @@ function createWindow() {
             shell.openExternal("https://beqare.de/discord");
           },
         },
-        {
-          label: "Update",
-          click() {
-            
-          },
-        },
       ],
     },
   ];
