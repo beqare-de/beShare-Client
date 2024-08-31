@@ -1,6 +1,6 @@
 {
   "name": "beshare",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Share files online",
   "main": "index.js",
   "scripts": {

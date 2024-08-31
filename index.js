@@ -105,6 +105,27 @@ function createWindow() {
         shell.openExternal("https://beqare.de/discord");
       },
     },
+    {
+      label: "Reload",
+      submenu: [
+        {
+          label: "Web",
+          click() {
+            const currentWindow = BrowserWindow.getFocusedWindow();
+            if (currentWindow) {
+              currentWindow.reload();
+            }
+          },
+        },
+        {
+          label: "Client",
+          click() {
+            app.relaunch();
+            app.exit(0);
+          },
+        },
+      ],
+    },
   ];
 
   const menu = Menu.buildFromTemplate(menuTemplate);
