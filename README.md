@@ -1,2 +1,2 @@
 # [DOWNLOAD LATEST VERSION](https://github.com/beqare-de/beShare-Client/releases/latest)
-Join my [Discord](https://beqare.de/discord)
+Join my [Discord](https://beqare.de/discord) for Updates in #releases
